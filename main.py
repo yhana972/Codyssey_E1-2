@@ -1,15 +1,23 @@
-#파이썬 표준 라이브러리
-# 파이썬에서 파일이나 폴더의 경로(path)를 다루기 위해 제공되는 모듈
-# 기존 파이썬에선 파일 경로를 다룰 때 문자열로 다루었음, pathlib은 경로 자체를 하나의 객체로 다룸. 
-# 장점 : 기존은 윈도우(\)와 맥/리눅스(/) 경로 구분자가 달라 오류가 났음. pathlib 쓰면 파이썬이 알아서
-# 실행환경에 맞게 경로를 올바르게 처리함. 
 from pathlib import Path
 
 class Quiz:
     """
     Quiz 클래스는 퀴즈 한 문제의 데이터와 정답 판정을 담당.
+    문제 내용, 선택지 목록, 정답 번호, 사용자 답안 판정 
     """
-    pass
+    def __init__(self, question:str, choices: list[str], answer : int):
+        self.question = question
+        self.choices = choices
+        self.answer = answer
+
+    
+    def is_correct(self, user_answer: int) -> bool:
+        """사용자 입력 값과 정답을 비교하여 bool 타입으로 반환."""
+        if self.answer == user_answer :
+            return True
+        else:
+            return False
+
 
 class DataManager:
     """
@@ -67,6 +75,13 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+#파이썬 표준 라이브러리
+# 파이썬에서 파일이나 폴더의 경로(path)를 다루기 위해 제공되는 모듈
+# 기존 파이썬에선 파일 경로를 다룰 때 문자열로 다루었음, pathlib은 경로 자체를 하나의 객체로 다룸. 
+# 장점 : 기존은 윈도우(\)와 맥/리눅스(/) 경로 구분자가 달라 오류가 났음. pathlib 쓰면 파이썬이 알아서
+# 실행환경에 맞게 경로를 올바르게 처리함. 
 
 #__name__ 변수(str) : 파일 실행 시 __name__ 이라는 내장 특수 변수를 자동으로 생성. 
 #  현재 파일이 어떻게 실행되었는지에 따라 다른 값이 들어감. 
