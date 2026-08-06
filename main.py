@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 class Quiz:
@@ -48,12 +49,53 @@ class DataManager:
         self.file_path = Path(file_path)
 
     def load(self):
-        """퀴즈 목록/ 점수 기록을 불러오기"""
-        return [], [] # 퀴즈 목록, 점수 히스토리
+        """
+        퀴즈 목록/ 점수 기록을 불러오기
+        state.json 있음 -> 읽기 -> Quiz 객체 목록 생성 -> 퀴즈 목록과 점수 기록 반환
+        state.json 없음 -> 기본 데이터 반환 (get_default_data)
+        """
+
+        if not self.file_path.exists(): #False
+            print("저장된 퀴즈가 없어 기본 퀴즈로 시작합니다. 퀴즈를 추가해주세요!")
+            return self.get_default_data()
+
+        try:
+            with self.file_path.open(mode="r", encoding="utf-8") as file:
+                    data= json.load(file) #json 내용이 딕셔너리로 변환됨. 
+        except json.JSONDecodeError:
+            print("저장파일이 비어 있거나 손상되어 기본 퀴즈로 시작합니다.")
+            return self.get_default_data()
+        
+        quizzes = [ Quiz.from_dict(quiz_data) for quiz_data in data["quizzes"] ]
+        # 아래 코드와 같음.
+        # for quiz_data in data["quizzes"]: 
+        #   quizzes.add(Quiz.from_dict(quiz_data))
+                
+        score_history = data["score_history"]    
+            
+        return quizzes, score_history # 퀴즈 목록, 점수 히스토리
 
     def save(self, quizzes, score_history):
         """퀴즈 목록/ 점수 기록을 저장"""
         pass
+
+    def get_default_data(self)->tuple[list[Quiz], list[dict]]:
+        """저장 파일이 없을 때 사용할 기본 데이터 반환."""
+        #기본 퀴즈 객체 목록 만들기
+        default_quizzes = [
+            Quiz(
+                question="다음 중 빅데이터 분석 방법론 중\n 서로 피드백을 주고 받을 수 있는 단계로\n 바르게 연결된 것은 무엇인가?",
+                choices=[
+                    "분석 기획 - 데이터 분석",
+                    "데이터 준비 - 데이터 분석",
+                    "데이터 분석 - 시스템 구현",
+                    "시스템 구현 - 평가 및 전개"
+                ],
+                answer=2
+            ),
+        ]
+        #빈 점수 기록 목록과 함께 반환
+        return default_quizzes, []
 
 
 class QuizGame:
@@ -146,3 +188,9 @@ if __name__ == "__main__":
 # 도우미 함수(from_dict)를 만드는 이유 (안 쓸 때와의 차이) : 가장 큰 차이는 '코드의 중복 제거'와 '유지보수성'
 # 도우미 함수 안 쓸때 : 코드 곳곳에 d1['딕셔너리키 명']으로 사용하여 객체를 여러개 반복해서 써야함. 딕셔너리 키 명이 변경될때 그 코드들 일일히 다 바꿔줘야함.
 # 도우미 함수 쓸때 : 코드 가독성이 좋아짐.(반복 작성X), 딕셔너리 구조가 변경되도 함수에서 수정하면 나머지 전체 수정 안해도 됨. 
+
+# .open(mode="r", encoding="utf-8") as file:
+# mode="r" : 파일 읽기 모드, encoding="utf-8" : 한글이 깨지지 않도록 utf-8 사용. with : 작업이 끝난 후 파일 자동 닫기.
+
+# except json.JSONDecodeError: 아래 상황에서 오류를 처리함. 
+# 파일이 비어있음, Json 문법이 잘못됨, 쉼표가 빠짐, 큰 따옴표가 잘못됨, 중괄호가 닫히지 않음. 
