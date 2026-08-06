@@ -19,6 +19,27 @@ class Quiz:
             return False
 
 
+    def to_dict(self) -> dict:
+        """Quiz 객체를 JSON 저장이 가능한 딕셔너리로 변환."""
+        return {
+            "question" : self.question,
+            "choices" : self.choices,
+            "answer" : self.answer
+        }
+
+    @classmethod
+    def from_dict(cls, data:dict) -> "Quiz":
+        """
+        딕셔너리 데이터를 Quiz 객체로 반환. 
+        cls : 현재 클래스 자체
+        """
+        return cls(
+            question=data['question'],
+            choices=data['choices'],
+            answer=data['answer']
+        )
+
+
 class DataManager:
     """
     게임 데이터를 파일에서 읽고 파일로 저장함.
@@ -100,3 +121,28 @@ if __name__ == "__main__":
 
 # self : 객체 자신을 가리키는 파이썬의 매개변수. 클래스 사용해 객체 만들때 그 객체를 가리키는 참조값이 self가 됨. 
 # ex ) QuizGame(quizzes, score_history) = self 
+
+# @classmethod :  클래스 메서드 장식자. 클래스에 직접 작동하는 기능임을 알려줌. classmethod는 객체 만들기 전에도 클래스 이름으로 바로 호출해서 사용 가능한 기능. 
+# 일반 메서드: 이미 만들어진 quiz 객체가 호출
+#quiz = Quiz(...)
+#quiz.show_answer() 
+# 클래스 메서드: 객체 생성 없이 Quiz 클래스가 직접 호출
+#new_quiz = Quiz.from_dict(data)
+
+# cls : 자기 자신 클래스 의미. 클래스 자신을 가리키기 위함. 
+# 왜 클래스명으로 직접 안쓰고 cls로 쓰는가? 상속때문. 
+# 만약 Quiz를 상속받은 MultipleChoiceQuiz(객관식 퀴즈)라는 자식 클래스가 있다고 가정. 
+# Quiz 대신 cls를 쓰면, 상속받은 자식 클래스에서 이 메서드를 실행했을 때 자동으로 자식 클래스의 객체를 생성해주므로 코드의 재사용성이 훨씬 높아짐.
+
+# -> "Quiz" : Quiz 객체가 결과로 나온다는 표시. 
+# -> "Quiz" vs -> Quiz 차이는? 이썬이 코드를 읽는 순서(타임라인) 때문에 발생.
+# -> Quiz (에러 발생 가능): def from_dict(...)를 정의하는 시점에는 아직 Quiz라는 클래스의 정의가 완전히 끝나지 않은 상태. 따라서 파이썬은 "Quiz 뭐임?"라며 NameError를 발생시킬 수 있음.
+#-> "Quiz" (안전함): 따옴표를 붙여 문자열(Type Hint String)로 적어두면, 파이썬에게 "지금은 문자로 써두지만, 나중에 이 클래스 정의 끝나면 Quiz 타입으로 해석해 줘"라고 알려주는 것. (이를 Forward Reference/선행 참조라 부름.)
+# 파이썬 3.7 이상에서 코드 맨 위에 from __future__ import annotations를 추가하면 따옴표 없이 -> Quiz라고 적어도 에러가 나지 않음.
+
+# return cls {...} : 클래스 객체를 생성해서 반환. 
+# Json 파일은 딕셔너리 형태로 데이터를 넘겨줌. 그럼 Quiz 객체에 딕셔너리 키 값을 직접 지정해서 생성해도 되지 않나? 가능은 함.
+# 딕셔너리 형태에서 객체 형태로 변환해주는 메서드는 직관적으로 변환해주어 사용할뿐.
+# 도우미 함수(from_dict)를 만드는 이유 (안 쓸 때와의 차이) : 가장 큰 차이는 '코드의 중복 제거'와 '유지보수성'
+# 도우미 함수 안 쓸때 : 코드 곳곳에 d1['딕셔너리키 명']으로 사용하여 객체를 여러개 반복해서 써야함. 딕셔너리 키 명이 변경될때 그 코드들 일일히 다 바꿔줘야함.
+# 도우미 함수 쓸때 : 코드 가독성이 좋아짐.(반복 작성X), 딕셔너리 구조가 변경되도 함수에서 수정하면 나머지 전체 수정 안해도 됨. 
