@@ -40,7 +40,6 @@ class Quiz:
             answer=data['answer']
         )
 
-
 class DataManager:
     """
     게임 데이터를 파일에서 읽고 파일로 저장함.
@@ -75,9 +74,40 @@ class DataManager:
             
         return quizzes, score_history # 퀴즈 목록, 점수 히스토리
 
-    def save(self, quizzes, score_history):
-        """퀴즈 목록/ 점수 기록을 저장"""
-        pass
+    def save(self, quizzes: list[Quiz], score_history: list[dict]) -> None:
+        """
+            퀴즈 목록/ 점수 기록을 저장
+        """
+        # 1. Quiz 객체 목록을 딕셔너리 목록으로 반환
+        quiz_data_list = [ quiz.to_dict() for quiz in quizzes]
+        # for quiz in quizzes:
+        #     quiz_data_list.append(quiz.to_dict()) 
+        
+        # 2. 전체 저장 데이터 구성
+        data = {
+            "quizzes" : quiz_data_list,
+            "score_history" : score_history
+        }
+        # 추가 : 저장 도중 문제 생길 때 대비용 임시 파일. 임시 파일에 먼저 저장 시도 -> 성공 -> 임시 파일을 state.json으로 교체
+        temp_path = self.file_path.with_suffix(
+            self.file_path.suffix+".tmp"
+        ) # 임시 파일은 state.json.tmp 가 될 것임. 이것은 깃에 추가 되지 않도록 .gitignore에도 추가 해줄 예정.
+
+        try:
+            # 3. UTF-8 쓰기 모드로 파일 열기
+            with temp_path.open(mode="w", encoding="utf-8") as file:
+                # 4. json.dump()로 저장
+                # 임시 파일에 데이터 저장.
+                json.dump(data,file, ensure_ascii=False, indent=2)
+            # 저장이 끝난 임시 파일을 실제 파일로 교체
+            temp_path.replace(self.file_path)
+        # 5. 저장 오류 처리
+        except OSError as error:
+            print(f"데이터를 저장하지 못했습니다. : {error}")
+
+            if temp_path.exists():
+                temp_path.unlink()
+        
 
     def get_default_data(self)->tuple[list[Quiz], list[dict]]:
         """저장 파일이 없을 때 사용할 기본 데이터 반환."""
@@ -96,7 +126,6 @@ class DataManager:
         ]
         #빈 점수 기록 목록과 함께 반환
         return default_quizzes, []
-
 
 class QuizGame:
     """ 
@@ -202,3 +231,7 @@ if __name__ == "__main__":
 # 1. 파일 접근 및 경로 오류 (파일 찾을 수 없음, 권한 부족, 경로 오류, 파일 잠김)
 # 2. 포맷/파싱 오류(잘못된 포맷(문법오류), 인코딩 불일치(한글깨짐), 데이터타입/스키마 불일치(숫자인줄 알았는데 문자열, 필수 키 누락하여 객체 복원 못함))
 # 3. 자원/환경 오류 (저장공간부족, 파일 크기 초과, I/O 중단)
+
+# json.dump() 
+# ensure_ascii=False : 한글을 사람이 읽을 수 있는 형태로 저장함. 
+# indent=2 : json을 두 칸 들여쓰기하여 읽기 쉽게 저장함. 

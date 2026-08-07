@@ -30,3 +30,7 @@ env/
 build/
 dist/
 *.egg-info/
+
+#state.json
+state.json.tmp
+state.json
