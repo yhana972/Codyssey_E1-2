@@ -32,7 +32,7 @@ class QuizGame:
                 self.show_quizzes()
 
             elif menu == 3:
-                self.ui.show_message("퀴즈 삭제 기능 준비 중입니다.")
+                self.delete_quiz()
 
             elif menu == 4:
                 self.ui.show_message("퀴즈 풀기 기능 준비 중입니다.")
@@ -84,3 +84,31 @@ class QuizGame:
             self.ui.show_quiz(quiz=quiz, number=index)
             print(f"\n")
         self.ui.show_message("================")
+
+    def delete_quiz(self) -> None:
+        """등록된 퀴즈를 삭제한다."""
+
+        # 1. 퀴즈가 없는지 확인
+        if not self.quizzes:
+            self.ui.show_message("등록된 퀴즈가 없습니다.")
+            return
+        # 2. 퀴즈 목록 출력
+        self.show_quizzes()
+        # 3. 삭제할 번호 입력
+        delete_number = self.ui.get_number("삭제할 퀴즈 번호:", 1, len(self.quizzes))
+        # 4. 사용자 번호 → 리스트 인덱스로 변환
+        delete_index = delete_number - 1
+        # 5. 삭제 대상 출력
+        selected_quiz = self.quizzes[delete_index]
+        self.ui.show_quiz(
+            selected_quiz, number=delete_number
+        )  # delete_number는 사용자가 입력한 값임.
+        # 6. 삭제 여부 확인
+        confirmed = self.ui.get_yes_no("정말 삭제하시겠습니까? (y/n) : ")
+        # 7. 삭제
+        if not confirmed:
+            self.ui.show_message("삭제를 취소 하셨습니다.")
+            return
+        # 8. 결과 메시지
+        delete_quiz = self.quizzes.pop(delete_index)
+        self.ui.show_message(f"'{delete_quiz.question}' 퀴즈를 삭제했습니다.")

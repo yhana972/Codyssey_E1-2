@@ -70,3 +70,20 @@ class ConsoleUI:
 
     def show_message(self, message: str) -> None:
         print(message)
+
+    def get_yes_no(self, message: str) -> bool:
+        """y 또는 n을 입력받아 bool로 반환한다."""
+
+        while True:
+            value = input(message).strip().lower()
+
+            # y → True
+            if value == "y":
+                return True
+            # n → False
+            elif value == "n":
+                return False
+            # 그 외 → 안내 후 재입력
+            else:
+                print("대문자 Y, N 또는 소문자 y, n로 입력해주세요.")
+                continue
