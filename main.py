@@ -1,5 +1,6 @@
 from data_manager import DataManager
 from quiz_game import QuizGame
+from console_ui import ConsoleUI
 
 
 def main():
@@ -9,8 +10,11 @@ def main():
     # 게임 데이터 불러오기
     quizzes, score_history = data_manager.load()
 
-    # 게임 객체 생성 (퀴즈 목록과 점수 기록을 전달)
-    game = QuizGame(quizzes, score_history)
+    # 콘솔 UI 객체 생성
+    ui = ConsoleUI()
+
+    # 게임 객체 생성 (퀴즈 목록과 점수 기록, UI를 전달)
+    game = QuizGame(quizzes, score_history, ui)
 
     try:  # 에러가 발생할 가능성이 있는 코드를 넣는곳
         # 게임 진행
