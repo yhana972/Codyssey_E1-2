@@ -16,5 +16,30 @@ class QuizGame:
 
     def run(self):
         """게임 진행"""
-        self.ui.show_main_menu()
-        # menu = self.ui.get_number()
+        while True:
+            self.ui.show_main_menu()
+
+            menu = self.ui.get_number(
+                "메뉴를 선택하세요: ",
+                0,
+                5,
+            )
+            # menu 값에 따라 분기
+            if menu == 1:
+                self.ui.show_message("퀴즈 추가 기능 준비 중입니다.")
+
+            elif menu == 2:
+                self.ui.show_message("퀴즈 목록 기능 준비 중입니다.")
+
+            elif menu == 3:
+                self.ui.show_message("퀴즈 삭제 기능 준비 중입니다.")
+
+            elif menu == 4:
+                self.ui.show_message("퀴즈 풀기 기능 준비 중입니다.")
+
+            elif menu == 5:
+                self.ui.show_message("점수 기록 기능 준비 중입니다.")
+
+            elif menu == 0:
+                self.ui.show_message("게임을 종료합니다.")
+                break
