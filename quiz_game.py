@@ -29,7 +29,7 @@ class QuizGame:
                 self.add_quiz()
 
             elif menu == 2:
-                self.ui.show_message("퀴즈 목록 기능 준비 중입니다.")
+                self.show_quizzes()
 
             elif menu == 3:
                 self.ui.show_message("퀴즈 삭제 기능 준비 중입니다.")
@@ -69,3 +69,18 @@ class QuizGame:
         self.quizzes.append(quiz)
         # 완료 메시지
         self.ui.show_message("=== 퀴즈 추가 완료 ===")
+
+    def show_quizzes(self) -> None:
+        """등록된 퀴즈 목록을 출력한다."""
+
+        # 퀴즈가 없는 경우 처리(퀴즈 전부 삭제 시에 나올 메세지)
+        if not self.quizzes:
+            self.ui.show_message("등록된 퀴즈가 없습니다.")
+            return
+        # 퀴즈 목록 순회
+        self.ui.show_message("=== 퀴즈 목록 ===")
+        for index, quiz in enumerate(self.quizzes, start=1):
+            # UI를 통해 각 퀴즈 출력
+            self.ui.show_quiz(quiz=quiz, number=index)
+            print(f"\n")
+        self.ui.show_message("================")
