@@ -26,7 +26,7 @@ class QuizGame:
             )
             # menu 값에 따라 분기
             if menu == 1:
-                self.ui.show_message("퀴즈 추가 기능 준비 중입니다.")
+                self.add_quiz()
 
             elif menu == 2:
                 self.ui.show_message("퀴즈 목록 기능 준비 중입니다.")
@@ -43,3 +43,29 @@ class QuizGame:
             elif menu == 0:
                 self.ui.show_message("게임을 종료합니다.")
                 break
+
+    def add_quiz(self) -> None:
+        """새로운 퀴즈를 추가한다."""
+
+        self.ui.show_message("=== 퀴즈 추가 ===")
+        # 문제 입력
+        question = self.ui.get_text("문제를 입력하세요: ")
+        # 선택지 4개 입력
+        choices = []
+        for number in range(1, 5):
+            choice = self.ui.get_text(f"선택지 {number}:")
+            choices.append(choice)
+        # 정답 번호 입력
+        answer = self.ui.get_number(
+            "정답 : ",
+            1,
+            len(choices),
+        )
+        # 힌트 입력
+        hint = self.ui.get_text("힌트 입력 : ")
+        # Quiz 객체 생성
+        quiz = Quiz(question=question, choices=choices, answer=answer, hint=hint)
+        # self.quizzes에 추가
+        self.quizzes.append(quiz)
+        # 완료 메시지
+        self.ui.show_message("=== 퀴즈 추가 완료 ===")
