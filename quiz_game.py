@@ -1,5 +1,6 @@
 from quiz import Quiz
 from console_ui import ConsoleUI
+import random
 
 
 class QuizGame:
@@ -119,11 +120,17 @@ class QuizGame:
         if not self.quizzes:
             self.ui.show_message("등록된 퀴즈가 없습니다. 먼저 퀴즈를 추가해주세요.")
             return
+
+        # + 몇개의 퀴즈를 풀건지 선택 및 문제 랜덤으로 돌리기
+        quiz_count = self.ui.get_number(
+            "몇 문제를 푸실건가요? : ", 1, len(self.quizzes)
+        )
+        random_quizzes = random.sample(self.quizzes, quiz_count)
         # 2. 점수 초기화
         score = 0
         self.ui.show_message("=== 퀴즈 풀기 ===")
         # 3. 퀴즈 순회
-        for number, quiz in enumerate(self.quizzes, start=1):
+        for number, quiz in enumerate(random_quizzes, start=1):
             # 4. 문제 출력
             self.ui.show_quiz(quiz=quiz, number=number)
             # 5. 사용자 답 입력
@@ -140,7 +147,7 @@ class QuizGame:
                 )
             self.ui.show_message("-" * 30)
         # 7. 최종 결과 출력
-        one_score = 100 / len(self.quizzes)
+        one_score = 100 / quiz_count
         self.ui.show_message("=== 최종 결과 ===")
-        self.ui.show_message(f"맞은 갯수 / 총 문제 수 : {score} / {len(self.quizzes)}")
+        self.ui.show_message(f"맞은 갯수 / 총 문제 수 : {score} / {quiz_count}")
         self.ui.show_message(f"총 점수 : {score*one_score:.1f} / 100")
