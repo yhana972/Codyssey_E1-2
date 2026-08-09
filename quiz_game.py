@@ -18,7 +18,6 @@ class QuizGame:
         """게임 진행"""
         while True:
             self.ui.show_main_menu()
-
             menu = self.ui.get_number(
                 "메뉴를 선택하세요: ",
                 0,
@@ -35,7 +34,7 @@ class QuizGame:
                 self.delete_quiz()
 
             elif menu == 4:
-                self.ui.show_message("퀴즈 풀기 기능 준비 중입니다.")
+                self.play_quiz()
 
             elif menu == 5:
                 self.ui.show_message("점수 기록 기능 준비 중입니다.")
@@ -75,7 +74,7 @@ class QuizGame:
 
         # 퀴즈가 없는 경우 처리(퀴즈 전부 삭제 시에 나올 메세지)
         if not self.quizzes:
-            self.ui.show_message("등록된 퀴즈가 없습니다.")
+            self.ui.show_message("등록된 퀴즈가 없습니다. 먼저 퀴즈를 추가해주세요.")
             return
         # 퀴즈 목록 순회
         self.ui.show_message("=== 퀴즈 목록 ===")
@@ -112,3 +111,36 @@ class QuizGame:
         # 8. 결과 메시지
         delete_quiz = self.quizzes.pop(delete_index)
         self.ui.show_message(f"'{delete_quiz.question}' 퀴즈를 삭제했습니다.")
+
+    def play_quiz(self) -> None:
+        """등록된 퀴즈를 순서대로 풀고 점수를 계산한다."""
+
+        # 1. 퀴즈가 없는지 확인
+        if not self.quizzes:
+            self.ui.show_message("등록된 퀴즈가 없습니다. 먼저 퀴즈를 추가해주세요.")
+            return
+        # 2. 점수 초기화
+        score = 0
+        self.ui.show_message("=== 퀴즈 풀기 ===")
+        # 3. 퀴즈 순회
+        for number, quiz in enumerate(self.quizzes, start=1):
+            # 4. 문제 출력
+            self.ui.show_quiz(quiz=quiz, number=number)
+            # 5. 사용자 답 입력
+            user_answer = self.ui.get_number("정답 : ", 1, len(quiz.choices))
+            # 6. 정답 판정
+            if quiz.is_correct(user_answer):
+                # 정답
+                score += 1
+                self.ui.show_message("[정답] 점수가 오릅니다!")
+            else:
+                # 오답
+                self.ui.show_message(
+                    f"[오답] 정답은 {quiz.choices[quiz.answer-1]}입니다!"
+                )
+            self.ui.show_message("-" * 30)
+        # 7. 최종 결과 출력
+        one_score = 100 / len(self.quizzes)
+        self.ui.show_message("=== 최종 결과 ===")
+        self.ui.show_message(f"맞은 갯수 / 총 문제 수 : {score} / {len(self.quizzes)}")
+        self.ui.show_message(f"총 점수 : {score*one_score:.1f} / 100")
