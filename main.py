@@ -1,9 +1,13 @@
 from data_manager import DataManager
 from quiz_game import QuizGame
 from console_ui import ConsoleUI
+import signal
 
 
 def main():
+    # Ctrl+Z가 발생시킨 정지 신호를 무시하라라는 명령어
+    if hasattr(signal, "SIGTSTP"):
+        signal.signal(signal.SIGTSTP, signal.SIG_IGN)
     # 게임 데이터 관리 객체 생성 ("state.json" 파일을 사용)
     data_manager = DataManager("state.json")
 
