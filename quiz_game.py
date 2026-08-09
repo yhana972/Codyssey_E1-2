@@ -1,6 +1,7 @@
 from quiz import Quiz
 from console_ui import ConsoleUI
 import random
+from datetime import datetime
 
 
 class QuizGame:
@@ -38,7 +39,7 @@ class QuizGame:
                 self.play_quiz()
 
             elif menu == 5:
-                self.ui.show_message("점수 기록 기능 준비 중입니다.")
+                self.show_score_history()
 
             elif menu == 0:
                 self.ui.show_message("게임을 종료합니다.")
@@ -170,3 +171,25 @@ class QuizGame:
         self.ui.show_message(f"맞은 갯수 / 총 문제 수 : {correct_score} / {quiz_count}")
         self.ui.show_message(f"힌트 사용 : {hint_count}회")
         self.ui.show_message(f"총 점수 : {earned_score:.1f} / 100")
+
+        game_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        game_record = {
+            "played_at": game_time,
+            "question_count": quiz_count,
+            "correct_count": correct_score,
+            "hint_count": hint_count,
+            "score": round(earned_score, 1),
+        }
+        self.score_history.append(game_record)  # 게임 히스토리 저장
+
+    def show_score_history(self) -> None:
+        """저장된 게임 점수 기록을 출력한다."""
+
+        # 기록 없음 검사
+        if not self.score_history:
+            self.ui.show_message("아직 저장된 점수 기록이 없습니다.")
+            return
+        # 기록 반복
+        for number, record in enumerate(self.score_history, start=1):
+            # UI를 통해 출력
+            self.ui.show_score_record(record=record, number=number)

@@ -89,5 +89,27 @@
       "hint": "1"
     }
   ],
-  "score_history": []
+  "score_history": [
+    {
+      "played_at": "2026-08-09 17:48:06",
+      "question_count": 1,
+      "correct_count": 1,
+      "hint_count": 0,
+      "score": 100.0
+    },
+    {
+      "played_at": "2026-08-09 17:48:41",
+      "question_count": 1,
+      "correct_count": 0,
+      "hint_count": 0,
+      "score": 0
+    },
+    {
+      "played_at": "2026-08-09 17:57:15",
+      "question_count": 1,
+      "correct_count": 1,
+      "hint_count": 0,
+      "score": 100.0
+    }
+  ]
 }
