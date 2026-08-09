@@ -155,10 +155,10 @@ class QuizGame:
                 correct_score += 1
                 if used_hint:  # 힌트 써서 맞췄다면 획득점수의 반만 점수가 오르게
                     earned_score += one_score * 0.5
-                    self.ui.show_message(f"[정답] +{one_score * 0.5}점 획득")
+                    self.ui.show_message(f"[정답] +{one_score * 0.5:.1f}점 획득")
                 else:
                     earned_score += one_score
-                    self.ui.show_message(f"[정답] +{one_score}점 획득")
+                    self.ui.show_message(f"[정답] +{one_score:.1f}점 획득")
             else:
                 # 오답
                 self.ui.show_message(
