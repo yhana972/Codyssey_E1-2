@@ -6,7 +6,13 @@
 
 게임 데이터는 `state.json` 파일에 저장되며, 프로그램을 다시 실행해도 퀴즈 목록과 점수 기록을 불러올 수 있도록 구현했다.
 
-## 2. 프로젝트 목표
+## 2. 퀴즈 주제 선정 이유
+
+이 프로젝트의 퀴즈 주제는 ADsP 문제 은행이다. ADsP 자격증 시험을 준비하면서 자주 등장하는 개념을 반복해서 풀어볼 수 있도록 퀴즈 형태로 구성했다.
+
+기본 퀴즈는 빅데이터 분석 방법론, 분석 성숙도, 위험 대응, 데이터 거버넌스, 시계열 분석, 이상값 등 ADsP 학습 범위와 관련된 문제로 구성되어 있다. 사용자가 직접 문제를 추가하고 저장할 수 있으므로 시험 준비 과정에서 개인 문제 은행처럼 확장해서 사용할 수 있다.
+
+## 3. 프로젝트 목표
 
 이 프로젝트는 Codyssey 과제 제출용으로, Python의 기본 문법과 객체 지향 구조를 사용해 작은 콘솔 프로그램을 완성하는 것을 목표로 한다.
 
@@ -20,7 +26,7 @@
 - 역할별 클래스 분리
 - Git 브랜치와 병합 실습
 
-## 3. 실행 환경
+## 4. 실행 환경
 
 저장소에서 확인한 실행 환경은 다음과 같다.
 
@@ -29,9 +35,11 @@
 - WSL Ubuntu 환경에서 검증
 - Git 사용
 
+![개발 환경](docs/images/environment.png)
+
 외부 패키지를 설치할 필요는 없다.
 
-## 4. 프로젝트 구조
+## 5. 프로젝트 구조
 
 ```text
 .
@@ -43,16 +51,31 @@
 ├── state.json
 ├── docs/
 │   └── images/
-│       └── .gitkeep
+│       ├── environment.png
+│       ├── main-menu.png
+│       ├── quiz-add.png
+│       ├── quiz-list.png
+│       ├── quiz-delete.png
+│       ├── question-count-random.png
+│       ├── hint.png
+│       ├── final-score.png
+│       ├── score-history.png
+│       ├── state-json.png
+│       ├── data-restore.png
+│       ├── safe-exit.png
+│       ├── py-compile.png
+│       └── git-log.png
 ├── src/
 │   └── .gitkeep
 ├── .gitignore
 └── README.md
 ```
 
-현재 실제 소스 코드는 프로젝트 루트의 Python 파일들에 있다. `docs/images/`와 `src/` 폴더에는 `.gitkeep`만 존재한다.
+현재 실제 소스 코드는 프로젝트 루트의 Python 파일들에 있다. `docs/images/`에는 README에 삽입할 실행 화면 이미지가 저장되어 있고, `src/` 폴더에는 `.gitkeep`만 존재한다.
 
-## 5. 클래스 구조와 역할
+![프로젝트 파일 구조](docs/images/project-structure.png)
+
+## 6. 클래스 구조와 역할
 
 | 파일 | 클래스/함수 | 역할 |
 | --- | --- | --- |
@@ -127,7 +150,7 @@
 - 종료 시 `data_manager.save()`로 데이터 저장
 - `SIGTSTP`가 있는 환경에서는 `Ctrl+Z` 정지 신호를 무시하도록 설정
 
-## 6. 주요 기능
+## 7. 주요 기능
 
 실제 코드 기준 구현 기능은 다음과 같다.
 
@@ -150,7 +173,7 @@
 - [x] `Ctrl+C`, `Ctrl+D` 안전 종료
 - [x] `Ctrl+Z` 정지 신호 무시 처리
 
-## 7. 게임 진행 방식
+## 8. 게임 진행 방식
 
 프로그램을 실행하면 다음 메뉴가 반복해서 출력된다.
 
@@ -165,11 +188,17 @@
 ================
 ```
 
+![메인 메뉴](docs/images/main-menu.png)
+
 퀴즈 풀기를 선택하면 현재 등록된 전체 문제 수 안에서 몇 문제를 풀지 입력한다. 입력한 문제 수만큼 퀴즈가 랜덤으로 선택되어 출제된다.
+
+![문제 수 선택 및 랜덤 출제](docs/images/question-count-random.png)
 
 문제에 힌트가 있으면 힌트를 볼지 선택할 수 있다. 힌트를 사용한 뒤 정답을 맞히면 해당 문제 배점의 절반만 획득한다.
 
-## 8. 점수 계산 방식
+![힌트 사용](docs/images/hint.png)
+
+## 9. 점수 계산 방식
 
 점수는 전체 게임 기준 100점 만점으로 계산한다.
 
@@ -185,7 +214,9 @@
 
 최종 점수는 소수점 첫째 자리까지 출력하고, 점수 기록에는 `round(earned_score, 1)` 값으로 저장한다.
 
-## 9. 데이터 저장 구조
+![최종 점수](docs/images/final-score.png)
+
+## 10. 데이터 저장 구조
 
 게임 데이터는 `state.json`에 저장된다. 실제 저장 구조는 다음과 같다.
 
@@ -218,6 +249,8 @@
 
 현재 저장소의 `state.json`에는 기본 퀴즈 6개와 빈 점수 기록이 저장되어 있다.
 
+![state.json 저장 데이터](docs/images/state-json.png)
+
 ### 기본 데이터 정책
 
 `DataManager.load()` 기준 기본 데이터 정책은 다음과 같다.
@@ -227,7 +260,7 @@
 - `state.json` 내부에 필요한 키가 없으면 기본 퀴즈 6개와 빈 점수 기록으로 시작
 - 정상 JSON에서 `quizzes`가 빈 리스트라면, 사용자가 모든 퀴즈를 삭제한 정상 상태로 보고 빈 목록을 유지
 
-## 10. 예외 처리 및 데이터 보호
+## 11. 예외 처리 및 데이터 보호
 
 입력 검증은 `ConsoleUI`에서 처리한다.
 
@@ -235,6 +268,8 @@
 - 숫자가 아닌 값 입력 시 다시 입력 요청
 - 허용 범위를 벗어난 숫자 입력 시 다시 입력 요청
 - `y`, `n`이 아닌 값 입력 시 다시 입력 요청
+
+![잘못된 입력 처리](docs/images/input-validation.png)
 
 파일 처리 예외는 `DataManager`에서 처리한다.
 
@@ -249,13 +284,15 @@
 - `EOFError`: `Ctrl+D` 입력 시 안전 종료
 - `SIGTSTP`: 지원되는 환경에서 `Ctrl+Z`로 프로그램이 정지되지 않도록 무시
 
+![안전 종료 처리](docs/images/safe-exit.png)
+
 ### 안전한 저장 방식
 
 `DataManager.save()`는 데이터를 바로 `state.json`에 쓰지 않고, 먼저 `state.json.tmp`에 저장한다. 임시 파일 저장이 성공하면 `state.json`으로 교체한다.
 
 이 방식은 저장 중 오류가 발생했을 때 기존 `state.json`이 중간에 깨지는 위험을 줄이기 위한 것이다. `.gitignore`에는 `state.json.tmp`가 포함되어 있어 임시 파일이 Git에 포함되지 않도록 했다.
 
-## 11. 실행 방법
+## 12. 실행 방법
 
 WSL 또는 Linux 계열 터미널에서 프로젝트 루트로 이동한 뒤 실행한다.
 
@@ -265,7 +302,7 @@ python3 main.py
 
 Windows PowerShell에서는 `python3` 명령이 환경에 따라 다르게 동작할 수 있으므로, 이 저장소에서는 WSL Ubuntu에서 실행을 확인했다.
 
-## 12. 테스트 및 검증 방법
+## 13. 테스트 및 검증 방법
 
 문법 검사는 다음 명령으로 수행했다.
 
@@ -277,9 +314,11 @@ python3 -m py_compile main.py quiz.py quiz_game.py console_ui.py data_manager.py
 
 - WSL Ubuntu의 Python 3.14.4에서 `py_compile` 통과
 - 현재 코드 기준 외부 패키지 설치 불필요
-- `docs/images/`에는 실제 이미지 파일이 없어 README 이미지 링크는 추가하지 않음
+- `docs/images/`의 실행 화면 이미지를 README에 연결함
 
-## 13. Git 브랜치 및 협업 실습
+![문법 검사 결과](docs/images/py-compile.png)
+
+## 14. Git 브랜치 및 협업 실습
 
 이 프로젝트는 Git 브랜치를 사용해 기능을 나누어 개발하고 `main`으로 병합한 기록이 있다.
 
@@ -328,20 +367,55 @@ git merge
 git clone
 ```
 
-## 14. 실행 결과
+![Git 로그](docs/images/git-log.png)
 
-`docs/images/` 폴더는 존재하지만 현재 실제 실행 화면 이미지 파일은 없다. 이미지가 추가되면 아래 항목에 연결할 수 있다.
+## 15. 실행 결과
 
-<!-- TODO: 퀴즈 추가 실행 화면 추가 -->
-<!-- TODO: 퀴즈 목록 실행 화면 추가 -->
-<!-- TODO: 퀴즈 삭제 실행 화면 추가 -->
-<!-- TODO: 퀴즈 풀이 실행 화면 추가 -->
-<!-- TODO: 최종 점수 실행 화면 추가 -->
-<!-- TODO: 점수 기록 실행 화면 추가 -->
-<!-- TODO: state.json 저장 화면 추가 -->
-<!-- TODO: Git 로그 화면 추가 -->
+다음은 프로젝트 실행과 검증 과정에서 캡처한 화면이다.
 
-## 15. 프로젝트를 통해 학습한 내용
+### 개발 환경
+
+![개발 환경](docs/images/environment.png)
+
+### 메인 메뉴와 입력 검증
+
+![메인 메뉴](docs/images/main-menu.png)
+
+![입력 검증](docs/images/input-validation.png)
+
+### 퀴즈 관리
+
+![퀴즈 추가](docs/images/quiz-add.png)
+
+![퀴즈 목록](docs/images/quiz-list.png)
+
+![퀴즈 삭제](docs/images/quiz-delete.png)
+
+### 퀴즈 풀이와 점수
+
+![문제 수 선택 및 랜덤 출제](docs/images/question-count-random.png)
+
+![힌트 사용](docs/images/hint.png)
+
+![최종 점수](docs/images/final-score.png)
+
+![점수 기록](docs/images/score-history.png)
+
+### 데이터 저장과 복원
+
+![state.json 저장 데이터](docs/images/state-json.png)
+
+![데이터 복원](docs/images/data-restore.png)
+
+### 종료, 검사, Git 기록
+
+![안전 종료](docs/images/safe-exit.png)
+
+![문법 검사](docs/images/py-compile.png)
+
+![Git 로그](docs/images/git-log.png)
+
+## 16. 프로젝트를 통해 학습한 내용
 
 이 프로젝트를 통해 Python 콘솔 프로그램을 역할별 클래스로 나누어 구성하는 방법을 연습했다.
 
@@ -352,3 +426,5 @@ git clone
 - `main.py`는 객체를 연결하고 종료 시 데이터를 저장하는 진입점 역할만 담당하도록 구성했다.
 
 또한 JSON 파일을 사용해 프로그램 종료 후에도 데이터를 유지하는 방법과, Git 브랜치를 사용해 기능 개발 후 병합하는 흐름을 실습했다.
+
+
