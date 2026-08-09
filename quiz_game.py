@@ -76,7 +76,7 @@ class QuizGame:
 
         # 퀴즈가 없는 경우 처리(퀴즈 전부 삭제 시에 나올 메세지)
         if not self.quizzes:
-            self.ui.show_message("등록된 퀴즈가 없습니다. 먼저 퀴즈를 추가해주세요.")
+            self.ui.show_message("등록된 퀴즈가 없습니다.")
             return
         # 퀴즈 목록 순회
         self.ui.show_message("=== 퀴즈 목록 ===")
