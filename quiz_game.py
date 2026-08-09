@@ -123,23 +123,41 @@ class QuizGame:
 
         # + 몇개의 퀴즈를 풀건지 선택 및 문제 랜덤으로 돌리기
         quiz_count = self.ui.get_number(
-            "몇 문제를 푸실건가요? : ", 1, len(self.quizzes)
+            f"{len(self.quizzes)} 문제 중 몇 문제를 푸실건가요? : ",
+            1,
+            len(self.quizzes),
         )
         random_quizzes = random.sample(self.quizzes, quiz_count)
+        # 한문제 당 배점 계산
+        one_score = 100 / quiz_count
         # 2. 점수 초기화
-        score = 0
+        correct_score = 0  # 맞힌 문제 개수
+        earned_score = 0  # 실제 획득 점수
+        hint_count = 0  # 힌트 사용 개수
         self.ui.show_message("=== 퀴즈 풀기 ===")
         # 3. 퀴즈 순회
         for number, quiz in enumerate(random_quizzes, start=1):
+            used_hint = False  # 퀴즈 당 힌트 사용 여부 체크
             # 4. 문제 출력
             self.ui.show_quiz(quiz=quiz, number=number)
+            # + 문제에 힌트가 있다면 힌트 보기 여부 물어보기
+            if quiz.hint:
+                used_hint = self.ui.get_yes_no("힌트를 보시겠습니까? (y/n): ")
+                if used_hint:
+                    self.ui.show_message(f"힌트 : {quiz.hint}")
+                    hint_count += 1
             # 5. 사용자 답 입력
             user_answer = self.ui.get_number("정답 : ", 1, len(quiz.choices))
             # 6. 정답 판정
             if quiz.is_correct(user_answer):
                 # 정답
-                score += 1
-                self.ui.show_message("[정답] 점수가 오릅니다!")
+                correct_score += 1
+                if used_hint:  # 힌트 써서 맞췄다면 획득점수의 반만 점수가 오르게
+                    earned_score += one_score * 0.5
+                    self.ui.show_message(f"[정답] +{one_score * 0.5}점 획득")
+                else:
+                    earned_score += one_score
+                    self.ui.show_message(f"[정답] +{one_score}점 획득")
             else:
                 # 오답
                 self.ui.show_message(
@@ -147,7 +165,8 @@ class QuizGame:
                 )
             self.ui.show_message("-" * 30)
         # 7. 최종 결과 출력
-        one_score = 100 / quiz_count
+
         self.ui.show_message("=== 최종 결과 ===")
-        self.ui.show_message(f"맞은 갯수 / 총 문제 수 : {score} / {quiz_count}")
-        self.ui.show_message(f"총 점수 : {score*one_score:.1f} / 100")
+        self.ui.show_message(f"맞은 갯수 / 총 문제 수 : {correct_score} / {quiz_count}")
+        self.ui.show_message(f"힌트 사용 : {hint_count}회")
+        self.ui.show_message(f"총 점수 : {earned_score:.1f} / 100")
