@@ -67,5 +67,35 @@
       "hint": ""
     }
   ],
-  "score_history": []
+  "score_history": [
+    {
+      "played_at": "2026-08-10 19:25:26",
+      "question_count": 3,
+      "correct_count": 0,
+      "hint_count": 0,
+      "score": 0
+    },
+    {
+      "played_at": "2026-08-10 19:25:36",
+      "question_count": 3,
+      "correct_count": 1,
+      "hint_count": 0,
+      "score": 33.3
+    },
+    {
+      "played_at": "2026-08-10 20:11:07",
+      "question_count": 3,
+      "correct_count": 1,
+      "hint_count": 0,
+      "score": 33.3
+    }
+  ],
+  "best_score": 33.3,
+  "best_game": {
+    "played_at": "2026-08-10 19:25:36",
+    "question_count": 3,
+    "correct_count": 1,
+    "hint_count": 0,
+    "score": 33.3
+  }
 }
